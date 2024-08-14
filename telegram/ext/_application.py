@@ -276,6 +276,7 @@ class Application(Generic[BT, CCT, UD, CD, BD, JQ], AsyncContextManager["Applica
             "error_handlers",
             "handlers",
             "persistence",
+            "cache",
             "post_init",
             "post_shutdown",
             "post_stop",
@@ -300,6 +301,7 @@ class Application(Generic[BT, CCT, UD, CD, BD, JQ], AsyncContextManager["Applica
         job_queue: JQ,
         update_processor: "BaseUpdateProcessor",
         persistence: Optional[BasePersistence[UD, CD, BD]],
+        cache,
         context_types: ContextTypes[CCT, UD, CD, BD],
         post_init: Optional[
             Callable[["Application[BT, CCT, UD, CD, BD, JQ]"], Coroutine[Any, Any, None]]
@@ -345,6 +347,7 @@ class Application(Generic[BT, CCT, UD, CD, BD, JQ], AsyncContextManager["Applica
         self.chat_data: Mapping[int, CD] = MappingProxyType(self._chat_data)
 
         self.persistence: Optional[BasePersistence[UD, CD, BD]] = None
+        self.cache = cache
         if persistence and not isinstance(persistence, BasePersistence):
             raise TypeError("persistence must be based on telegram.ext.BasePersistence")
         self.persistence = persistence
